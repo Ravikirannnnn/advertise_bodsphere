@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { Volume2, VolumeX } from "lucide-react"; 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { motion, useAnimation, useInView } from "framer-motion"
@@ -16,6 +16,8 @@ function StatsCounter({ end, label, suffix = "" }: { end: number; label: string;
   const controls = useAnimation()
   const ref = useRef(null)
   const inView = useInView(ref)
+
+
 
   useEffect(() => {
     if (inView) {
@@ -57,6 +59,32 @@ export default function LandingPage() {
   const [email, setEmail] = useState("")
   const [isScrolled, setIsScrolled] = useState(false)
   const [isYearly, setIsYearly] = useState(false)
+  const [soundOn, setSoundOn] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && isMuted) {
+      video.play().catch(err => {
+        console.warn("Autoplay failed:", err);
+      });
+    }
+  }, [isMuted]);
+
+  const handleUnmute = () => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = false;
+      video.play().catch(err => {
+        console.warn("Autoplay failed:", err);
+      });
+    }
+    setIsMuted(false); // Update the state to reflect unmute
+  };
+  
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,49 +134,55 @@ export default function LandingPage() {
 
   const pricingPlans = [
     {
-      name: "Basic",
+      name: "🌟 Monthly Plan",
       description: "Perfect for beginners starting their yoga journey",
       monthlyPrice: 9.99,
       yearlyPrice: 99.99,
       features: [
-        "Access to 50+ beginner classes",
-        "Basic pose guides",
-        "Community forum access",
-        "1 live session per month",
+        "Access to ALL Yoga Teacher Trainings",
+        "World's Most Affordable & Accessible Yoga Content",
+        "All Yoga styles in one app",
+        "1000+ Yoga, Meditation & Wellness videos",
+        "Connect with top instructors",
+        "Join Bodsphere Community from 190+ Countries"
       ],
       popular: false,
     },
     {
-      name: "Premium",
+      name: "🌟 Yearly Plan",
       description: "Our most popular plan for dedicated practitioners",
       monthlyPrice: 19.99,
       yearlyPrice: 199.99,
       features: [
-        "Access to 200+ classes for all levels",
-        "Personalized practice recommendations",
-        "Progress tracking",
-        "4 live sessions per month",
-        "Downloadable classes for offline practice",
+        "All features of the Monthly Plan",
+        "Enjoy up to 40% off compared to monthly plans.",
+        "One-Time Payment, No Hassle",
+        "Early-bird invites to exclusive webinars",
+        "Free upgrades to future app features",
+        "Long-Term Benefits"
       ],
-      popular: true,
+      popular: false,
     },
     {
-      name: "Ultimate",
-      description: "The complete Bodsphere experience for serious yogis",
-      monthlyPrice: 29.99,
-      yearlyPrice: 299.99,
+      name: "🌿 Why Choose Us?",
+      description: "Yoga Like Never Before",
+      // monthlyPrice: 29.99,
+      // yearlyPrice: 299.99,
       features: [
-        "Unlimited access to all classes",
-        "1-on-1 sessions with instructors",
-        "Custom program creation",
-        "Unlimited live sessions",
-        "Priority support",
-        "Early access to new features",
+        "All-in-One Platform – Yoga Teacher Trainings, Yoga Classes, Meditation, Pranayama & Wellness in one app.",
+        "Get Bodsphere Accredited & Certified",
+        "Community of 190+ Countries",
+        "1000+ On-Demand Videos",
+        "Practice Anytime, Anywhere",
+        "Improve Flexibility & Strength",
+        "Boost Mental & Physical Health"
       ],
       popular: false,
     },
   ]
-
+  const handleClick = () => {
+    window.location.href = "https://www.bodsphere.com";
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-pink-50 ">
       {/* Navbar */}
@@ -226,11 +260,12 @@ export default function LandingPage() {
                 expert guidance, and a supportive community.
               </motion.p>
               <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-6 rounded-lg text-lg">
+                <Button onClick={handleClick} className="bg-primary hover:bg-primary/90 text-white px-8 py-6 rounded-lg text-lg">
                   Start Your Journey
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button
+                onClick={handleClick}
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary/10 px-8 py-6 rounded-lg text-lg"
                 >
@@ -275,14 +310,69 @@ export default function LandingPage() {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-gradient-to-br from-white/60 to-white/20 backdrop-blur-sm">
                 <div className="absolute inset-0  from-primary/10 to-rose-500/10"></div>
-                <Image
+                {/* <Image
                       src="/AW5A6009 copy lowRes.jpg" // 👈 Your single image
                   alt="Yoga Pose"
                   width={600}
                   height={600}
                   className="w-full h-auto"
+                /> */}
+         <video
+                  ref={videoRef}
+                  src="/AdVideo.mp4"
+                  autoPlay
+                  muted={isMuted}
+                  playsInline
+                  style={{ width: "100%", height: "auto" }}
+                  onClick={handleUnmute}
                 />
-                <motion.div
+               {isMuted && (
+       <motion.button
+       whileHover={{ scale: 1.05 }}
+       whileTap={{ scale: 0.9 }}
+       animate={{
+         boxShadow: soundOn
+           ? "0 0 15px rgba(34,197,94,0.6)"
+           : "0 0 10px rgba(255,255,255,0.2)",
+         backgroundColor: soundOn ? "#22c55e" : "#1e293b", // green or slate
+       }}
+       transition={{ duration: 0.3 }}
+       onClick={handleUnmute}
+       className={`flex items-center gap-3 px-5 py-3 rounded-full font-semibold text-white fixed top-6 right-6 z-50`}
+     >
+       {soundOn ? (
+         <>
+           <Volume2 className="animate-pulse" />
+           Sound On
+         </>
+       ) : (
+         <>
+           <VolumeX />
+           Tap for Sound
+         </>
+       )}
+     </motion.button>
+      )}
+      <motion.button
+      onClick={handleClick}
+  initial={{ y: 100, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  whileHover={{ scale: 1.08, rotate: -1 }}
+  whileTap={{ scale: 0.95, boxShadow: "inset 0 0 10px rgba(255,255,255,0.5)" }}
+  transition={{ type: "spring", stiffness: 300 }}
+  className="fixed bottom-6 right-6 z-50 px-6 py-4 rounded-full shadow-xl bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 text-white font-semibold text-lg flex items-center gap-2 hover:shadow-[0_0_20px_rgba(244,114,182,0.6)]"
+>
+  Join Now
+  <motion.span
+    initial={{ x: 0 }}
+    whileHover={{ x: 6 }}
+    transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
+  >
+    <ArrowRight size={20} />
+  </motion.span>
+</motion.button>
+
+                {/* <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.5 }}
@@ -302,7 +392,7 @@ export default function LandingPage() {
                       <p className="text-sm text-gray-600">Live Sessoins available • Join now</p>
                     </div>
                   </div>
-                </motion.div>
+                </motion.div> */}
               </div>
 
               {/* <motion.div
@@ -482,7 +572,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-rose-500 text-white">
+      {/* <section className="py-20 bg-gradient-to-r from-primary to-rose-500 text-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -517,7 +607,54 @@ export default function LandingPage() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </section> */}
+
+      <section className="py-20 bg-white text-gray-900 pb-20">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Choose Your Plan</h2>
+
+    <div className="flex flex-col md:flex-row gap-6 justify-center items-stretch px-0 md:px-20">
+      {pricingPlans.map((plan, idx) => (
+        <div
+          key={idx}
+          className={`flex-1 rounded-2xl border p-6 shadow-lg m-6 ${
+            plan.popular
+              ? 'border-primary bg-primary text-white'
+              : 'border-gray-200 bg-gray-50'
+          }`}
+        >
+          <h3 className="text-2xl font-semibold mb-2">{plan.name}</h3>
+          <p className="mb-4 text-sm opacity-80">{plan.description}</p>
+{plan.monthlyPrice ?(      
+      <div className="text-3xl font-bold mb-4">
+            ${plan.monthlyPrice} <span className="text-base font-normal">/mo</span>
+          </div>
+):null}
+
+          <ul className="mb-6 space-y-2 text-lm">
+            {plan.features.map((feature, i) => (
+              <li key={i} className="flex items-center gap-2">
+                ✔ {` `}
+                {feature}
+              </li>
+            ))}
+          </ul>
+
+          <button
+            className={`w-full py-2 rounded-md text-center font-medium ${
+              plan.popular
+                ? 'bg-white text-primary hover:bg-white/90'
+                : 'bg-primary text-white hover:bg-primary/90'
+            }`}
+          >
+            {/* Choose {plan.name} */}
+            Select
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">
