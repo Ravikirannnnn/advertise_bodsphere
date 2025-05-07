@@ -9,7 +9,7 @@ import { ArrowRight, CheckCircle, Instagram, Facebook, Twitter } from "lucide-re
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
+// 
 // Add this after the other imports at the top of the file
 function StatsCounter({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) {
   const [count, setCount] = useState(0)
